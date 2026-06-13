@@ -1,0 +1,20 @@
+# Normalize line endings
+* text=auto
+
+# Declare files that will always have LF line endings on checkouts.
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+
+# Denote binary files (don't touch line endings)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary

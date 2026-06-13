@@ -1,0 +1,40 @@
+Return a single JSON object. DO NOT include explanations or markdown fences.
+
+TASK:
+1. Product Analysis: Identify product, category, and features from Image 1.
+2. License Analysis: Extract license text/numbers from Image 2 (if provided).
+3. Listing: Generate title, description, and bullet points for {{platform}}.
+
+Inputs:
+- platform: {{platform}}
+- description: {{description}}
+- hints: {{product_name_hint}}, {{product_material_hint}}
+- dims: {{height}}x{{width}}x{{weight}} {{dimension_unit}}/{{weight_unit}}
+
+Response JSON structure:
+{
+  "product_analysis": {
+    "identified_product": string,
+    "confidence": float,
+    "category": {"platform_category": string, "platform_subcategory": string},
+    "attributes": {"color": string, "material": string, "visible_features": string[]}
+  },
+  "license_analysis": {
+    "document_type": string,
+    "extracted_text": string,
+    "license_numbers": string[],
+    "issuing_authority": string,
+    "product_match_assessment": string,
+    "confidence": float,
+    "warnings": string[],
+    "disclaimer": "Compliance guidance only. Manual verification required."
+  },
+  "listing": {
+    "title": string,
+    "description": string,
+    "bullet_points": string[],
+    "keywords": string[]
+  }
+}
+
+Return ONLY valid JSON.

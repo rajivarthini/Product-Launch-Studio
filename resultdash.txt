@@ -1,0 +1,271 @@
+'use client';
+
+import { WorkflowResponse, resolveImageUrl } from '@/lib/api';
+import { useState, useEffect } from 'react';
+
+interface Props { data: WorkflowResponse; }
+
+export default function ResultsDashboard({ data }: Props) {
+
+  const {
+    platform,
+    product_analysis,
+    listing,
+    images,
+    packaging,
+    license_analysis,
+    pricing,
+    disclaimers
+  } = data;
+
+  const mockupImage = packaging?.packaging_mockup_image_url
+    ? resolveImageUrl(packaging.packaging_mockup_image_url)
+    : undefined;
+
+  /* 🔧 FIX — Normalize backend image format */
+  const originalImages =
+    images?.original_images?.length
+      ? images.original_images
+      : images?.original_image
+        ? [images.original_image]
+        : [];
+
+  const cleanedImages =
+    images?.cleaned_images?.length
+      ? images.cleaned_images
+      : images?.cleaned_image
+        ? [images.cleaned_image]
+        : [];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+      {/* ── Row 1: Platform Rules + Product Info ── */}
+      <div className="results-grid">
+
+        {/* Platform Rules */}
+        <div className="glass-card">
+          <div className="card-body">
+            <div className="section-heading">
+              <div className="section-icon">🏪</div>
+              <div>
+                <p className="section-title" style={{ textTransform: 'capitalize' }}>
+                  {platform.selected} Platform Rules
+                </p>
+              </div>
+            </div>
+
+            {platform.rules_summary.listing_rules.length > 0 && (
+              <>
+                <p className="rule-heading">Listing Rules</p>
+                <ul className="rule-list">
+                  {platform.rules_summary.listing_rules.map((r, i) => (
+                    <li key={i}>{r}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {platform.rules_summary.image_rules.length > 0 && (
+              <>
+                <p className="rule-heading">Image Rules</p>
+                <ul className="rule-list">
+                  {platform.rules_summary.image_rules.map((r, i) => (
+                    <li key={i}>{r}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {platform.rules_summary.compliance_notes.length > 0 && (
+              <>
+                <p className="rule-heading">Compliance Notes</p>
+                <ul className="rule-list">
+                  {platform.rules_summary.compliance_notes.map((r, i) => (
+                    <li key={i}>{r}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {platform.rules_summary.disclaimer && (
+              <div className="warning-box">
+                ⚠️ {platform.rules_summary.disclaimer}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Product Analysis */}
+        <div className="glass-card">
+          <div className="card-body">
+
+            <div className="section-heading">
+              <div className="section-icon">🛍️</div>
+              <span className="section-title">Product Analysis</span>
+            </div>
+
+            <div>
+              <div className="info-row">
+                <span className="info-key">Identified as</span>
+                <span className="info-val">{product_analysis.identified_product || '—'}</span>
+              </div>
+
+              <div className="info-row">
+                <span className="info-key">Category</span>
+                <span className="info-val">{product_analysis.category?.platform_category || '—'}</span>
+              </div>
+
+              <div className="info-row">
+                <span className="info-key">Sub-category</span>
+                <span className="info-val">{product_analysis.category?.platform_subcategory || '—'}</span>
+              </div>
+
+              <div className="info-row">
+                <span className="info-key">Material</span>
+                <span className="info-val">{product_analysis.attributes?.material || '—'}</span>
+              </div>
+
+              <div className="info-row">
+                <span className="info-key">Color</span>
+                <span className="info-val">{product_analysis.attributes?.color || '—'}</span>
+              </div>
+            </div>
+
+            {product_analysis.attributes?.visible_features?.length > 0 && (
+              <>
+                <div className="divider" />
+
+                <p className="small-title">Visible Features</p>
+
+                <div className="tag-list">
+                  {product_analysis.attributes.visible_features.map((f, i) => (
+                    <span key={i} className="tag">{f}</span>
+                  ))}
+                </div>
+              </>
+            )}
+
+            <div className="divider" />
+
+            <p className="small-title">AI Confidence</p>
+
+            <div className="confidence-bar-wrap">
+              <div className="confidence-bar-bg">
+                <div
+                  className="confidence-bar-fill"
+                  style={{
+                    width: `${Math.round((product_analysis.confidence || 0) * 100)}%`
+                  }}
+                />
+              </div>
+
+              <span className="confidence-pct">
+                {Math.round((product_analysis.confidence || 0) * 100)}%
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ── Row 3: Images ── */}
+      {(originalImages.length > 0 || cleanedImages.length > 0 || packaging.packaging_mockup_image_url) && (
+
+        <div className="glass-card">
+          <div className="card-body">
+
+            <div className="section-heading">
+              <div className="section-icon">🖼️</div>
+              <span className="section-title">Images</span>
+            </div>
+
+            {/* Original Images */}
+            {originalImages.length > 0 && (
+              <>
+                <p className="small-title">Original</p>
+
+                <div className="image-grid">
+                  {originalImages.map((url, i) => (
+                    <div key={i} className="image-card">
+
+                      <img
+                        src={resolveImageUrl(url)}
+                        alt={`Original ${i + 1}`}
+                      />
+
+                      <span className="image-card-label">
+                        Original {i + 1}
+                      </span>
+
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Cleaned Images */}
+            {cleanedImages.length > 0 && (
+              <>
+                <p className="small-title">AI Enhanced</p>
+
+                <div className="image-grid">
+                  {cleanedImages.map((url, i) => (
+                    <div key={i} className="image-card">
+
+                      <img
+                        src={resolveImageUrl(url)}
+                        alt={`Enhanced ${i + 1}`}
+                      />
+
+                      <span className="image-card-label">
+                        Enhanced {i + 1}
+                      </span>
+
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Packaging Mockup */}
+            {packaging.packaging_mockup_image_url && (
+              <>
+                <p className="small-title">Packaging Mockup</p>
+
+                <div className="image-grid">
+                  <div className="image-card" style={{ aspectRatio: '4/3' }}>
+
+                    {packaging.packaging_mockup_image_url && (
+                      <img
+                        src={packaging.packaging_mockup_image_url}
+                        alt="Packaging Mockup"
+                      />
+                    )}
+
+                    <span className="image-card-label">
+                      Packaging Mockup
+                    </span>
+
+                  </div>
+                </div>
+              </>
+            )}
+
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
+function LicenseBadge({ confidence }: { confidence: number }) {
+
+  const pct = Math.round((confidence || 0) * 100);
+
+  if (pct >= 70) return <span className="badge badge-green">✓ Approved</span>;
+  if (pct >= 40) return <span className="badge badge-amber">⚠ Review</span>;
+
+  return <span className="badge badge-red">✗ Low Confidence</span>;
+}

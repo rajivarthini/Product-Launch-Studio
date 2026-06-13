@@ -1,0 +1,71 @@
+# Root GitIgnore for Product Launch Studio (Multi-package project)
+
+# --- Python Backend ---
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.pytest_cache/
+**/venv/
+**/.venv/
+**/venv2/
+**/env/
+**/ENV/
+
+# Python dependencies & distribution
+**/.eggs/
+**/develop-eggs/
+**/downloads/
+**/eggs/
+**/.lib/
+**/parts/
+**/sdist/
+**/var/
+**/wheels/
+**/share/python-wheels/
+**/*.egg-info/
+**/.installed.cfg
+**/*.egg
+**/manifest
+**/spec
+
+# Local application files / configurations
+backend/.env
+backend/out.json
+**/uploads/
+*.zip
+
+# --- Next.js Frontend ---
+**/node_modules/
+**/.next/
+**/out/
+**/build/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+**/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# --- System & Editor Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
